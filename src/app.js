@@ -129,7 +129,7 @@ class App{
                 <div id="total" style="font-size:1rem; font-weight:normal;">可用属性点：0</div>
             </div>
             <ul id="propertyAllocation" class="propinitial"></ul>
-            <button id="random" class="mainbtn" style="top:auto; bottom:7rem">随机分配</button>
+            <button id="random" class="mainbtn" style="top:auto; bottom:7rem">全部加满</button>
             <button id="start" class="mainbtn" style="top:auto; bottom:0.1rem">开始新人生</button>
         </div>
         `);
@@ -142,7 +142,7 @@ class App{
             return t;
         }
         const freshTotal = ()=>{
-            propertyPage.find('#total').text(`可用属性点：${this.#totalMax - total()}`);
+            propertyPage.find('#total').text(`每个10点随便加啦`);
         }
         const getBtnGroups = (name, min, max)=>{
             const group = $(`<li>${name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>`);
@@ -166,10 +166,10 @@ class App{
                 freshTotal();
             }
             btnAdd.click(()=>{
-                if(total() >= this.#totalMax) {
-                    this.hint('没有可分配的点数了');
-                    return;
-                }
+                // if(total() >= this.#totalMax) {
+                //     this.hint('没有可分配的点数了');
+                //     return;
+                // }
                 set(get()+1);
             });
             btnSub.click(()=>set(get()-1));
@@ -202,34 +202,22 @@ class App{
         propertyPage
             .find('#random')
             .click(()=>{
-                let t = this.#totalMax;
-                const arr = [10, 10, 10, 10];
-                while(t>0) {
-                    const sub = Math.round(Math.random() * (Math.min(t, 10) - 1)) + 1;
-                    while(true) {
-                        const select = Math.floor(Math.random() * 4) % 4;
-                        if(arr[select] - sub <0) continue;
-                        arr[select] -= sub;
-                        t -= sub;
-                        break;
-                    }
-                }
-                groups.CHR.set(10 - arr[0]);
-                groups.INT.set(10 - arr[1]);
-                groups.STR.set(10 - arr[2]);
-                groups.MNY.set(10 - arr[3]);
+                groups.CHR.set(10);
+                groups.INT.set(10);
+                groups.STR.set(10);
+                groups.MNY.set(10);
             });
 
         propertyPage
             .find('#start')
             .click(()=>{
-                if(total() < this.#totalMax) {
-                    this.hint(`你还有${this.#totalMax-total()}属性点没有分配完`);
-                    return;
-                } else if (total() > this.#totalMax) {
-                    this.hint(`你多使用了${total() - this.#totalMax}属性点`);
-                    return;
-                }
+                // if(total() < this.#totalMax) {
+                //     this.hint(`你还有${this.#totalMax-total()}属性点没有分配完`);
+                //     return;
+                // } else if (total() > this.#totalMax) {
+                //     this.hint(`你多使用了${total() - this.#totalMax}属性点`);
+                //     return;
+                // }
                 this.#life.restart({
                     CHR: groups.CHR.get(),
                     INT: groups.INT.get(),
@@ -245,6 +233,7 @@ class App{
         // Trajectory
         const trajectoryPage = $(`
         <div id="main">
+            <button id="hundred" class="mainbtn" style="top:auto; top:3rem">过一百年</button>
             <ul id="lifeTrajectory" class="lifeTrajectory"></ul>
             <button id="summary" class="mainbtn" style="top:auto; bottom:0.1rem">人生总结</button>
         </div>
@@ -281,6 +270,14 @@ class App{
             .find('#summary')
             .click(()=>{
                 this.switch('summary');
+            })
+        
+        trajectoryPage
+            .find('#hundred')
+            .click(()=>{
+                for(var i=0;i<100;i++) {
+                    trajectoryPage.find('#lifeTrajectory').click()
+                }
             })
 
         // Summary
